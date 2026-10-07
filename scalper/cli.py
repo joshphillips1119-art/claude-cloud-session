@@ -107,8 +107,9 @@ def cmd_daily(args, cfg):
     jdir.mkdir(parents=True, exist_ok=True)
     (jdir / f"{day}.md").write_text(render(clean(report), cfg.to_dict(), summary))
     slim = {k: v for k, v in report.items() if k != "tuning"}
-    slim["tuning"] = {n: {"adopted": t["adopted"], "params": t["params"], "incumbent": t["incumbent"],
-                          "best": t["best"], "n_candidates": t["n_candidates"]} for n, t in report["tuning"].items()}
+    slim["tuning"] = {n: {k: t[k] for k in ("adopted", "params", "incumbent", "target", "proposal", "hurdle",
+                                             "rejected_because", "flip_day_frac", "n_candidates")}
+                      for n, t in report["tuning"].items()}
     (jdir / f"{day}.json").write_text(json.dumps(clean(slim), indent=1) + "\n")
 
     e = report["oos"]["ensemble"]

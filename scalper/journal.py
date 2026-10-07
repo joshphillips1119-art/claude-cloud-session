@@ -62,7 +62,16 @@ def render(report: dict, cfg_dict: dict, summary: dict | None = None, notes: lis
             L.append(f"- `{c['strategy']}` params {json.dumps(c['from'])} -> {json.dumps(c['to'])} "
                      f"(train wz {c['train_wz'][0]:+.2f} -> {c['train_wz'][1]:+.2f}, val wz {c['val_wz'][0]:+.2f} -> {c['val_wz'][1]:+.2f})")
     else:
-        L.append("- No parameter changes passed the validation gate.")
+        L.append("- No parameter changes passed the gates.")
+    tuning = report.get("tuning") or {}
+    if tuning:
+        L += ["", "| strategy | params now | best region (train wz) | luck hurdle | decision |", "|---|---|---|---|---|"]
+        for n, t in sorted(tuning.items()):
+            tgt = t.get("target") or t.get("best") or {}
+            why = "adopted one step" if t.get("adopted") else "; ".join(t.get("rejected_because") or []) or "kept"
+            L.append(f"| {n} | `{json.dumps(t.get('params'))}` | `{json.dumps(tgt.get('params'))}` "
+                     f"({tgt.get('train', {}).get('wz', 0):+.2f}) | {t.get('hurdle')} | {why} |")
+        L.append("")
     th = report.get("threshold", {})
     if th.get("changed"):
         L.append(f"- Abstention threshold changed to {th['threshold']} (best z {th['best']['z']:+.2f} vs {th['current']['z']:+.2f}).")

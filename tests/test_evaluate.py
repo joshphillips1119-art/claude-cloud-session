@@ -82,3 +82,32 @@ def test_tune_threshold_respects_coverage():
     ens[big] = np.sign(fwd[big]) * ens[big].abs()  # only extreme scores are informative
     res = tune_threshold(ens, fwd, [0.0, 0.5, 0.9], 0.0, min_coverage=0.2, min_gain=0.5)
     assert res["threshold"] in (0.0, 0.5)  # 0.9 has ~5% coverage, below the floor
+
+
+def test_effective_weights_blend_caps_and_null():
+    from scalper.ensemble import NULL, effective_weights
+
+    learned = {"a": 0.7, "b": 0.1, "c": 0.1, NULL: 0.1}
+    fam = {"a": "trend", "b": "trend", "c": "flow"}
+    w = effective_weights(learned, fam, equal_blend=0.5, max_method=0.35, max_family=0.5)
+    assert abs(sum(w.values()) - 1) < 1e-5
+    assert w["a"] <= 0.35 + 1e-9 and w["a"] + w["b"] <= 0.5 + 1e-9
+    assert w[NULL] > 0.1, "capped-off mass moves to the null expert"
+
+
+def test_null_expert_shrinks_ensemble():
+    idx = pd.date_range("2026-09-01", periods=2, freq="5min", tz="UTC")
+    s = {"a": pd.Series([1.0, 1.0], index=idx)}
+    assert combine(s, {"a": 1.0}).iloc[0] == 1.0
+    assert abs(combine(s, {"a": 0.5, "_null": 0.5}).iloc[0] - 0.5) < 1e-12
+
+
+def test_expected_max_z_and_step_toward():
+    from scalper import strategies as S
+    from scalper.optimize import expected_max_z, step_toward
+
+    assert abs(expected_max_z(10) - 1.57) < 0.02 and abs(expected_max_z(100) - 2.53) < 0.02
+    strat = S.get("momentum")
+    cur = {"n": 1, "scale": 0.5, "_sign": 1}
+    nxt = step_toward(strat, cur, {"n": 12, "scale": 2.0, "_sign": -1})
+    assert nxt == {"n": 2, "scale": 1.0, "_sign": -1}

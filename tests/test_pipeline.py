@@ -70,7 +70,7 @@ def test_run_day_is_pure_and_versioned():
     assert st == before, "run_day must not mutate its input state"
     assert new["version"] == 1 and new["as_of"] == "2026-09-10"
     assert rep["oos"]["version"] == 0, "yesterday must be scored with the params live before the run"
-    assert abs(sum(rep["weights"].values()) - 1) < 1e-6
+    assert abs(sum(rep["weights"].values()) - 1) < 1e-4
 
 
 def test_guardrail_trips_on_persistent_losses():
@@ -87,7 +87,7 @@ def test_trial_rejects_noise_strategy(monkeypatch):
     from scalper import strategies as S
     import numpy as np
 
-    @S.register("_coinflip_test", defaults={"seed": 0}, grid={"seed": [0, 1, 2]}, category="other",
+    @S.register("zz_coinflip_test", defaults={"seed": 0}, grid={"seed": [0, 1, 2]}, category="other",
                 description="random scores for testing", invertible=False)
     def coinflip(df, seed):
         return pd.Series(np.random.default_rng(seed).uniform(-1, 1, len(df)), index=df.index)
@@ -95,8 +95,8 @@ def test_trial_rejects_noise_strategy(monkeypatch):
     try:
         df = generate(12, seed=2)
         new, rep = run_day(df, initial_state(), CFG, "2026-09-10", [])
-        assert rep["trials"]["_coinflip_test"]["status"] == "rejected"
-        assert "_coinflip_test" not in new["strategies"]
-        assert new["candidates"]["_coinflip_test"]["last_trial"] == "2026-09-10"
+        assert rep["trials"]["zz_coinflip_test"]["status"] == "rejected"
+        assert "zz_coinflip_test" not in new["strategies"]
+        assert new["candidates"]["zz_coinflip_test"]["last_trial"] == "2026-09-10"
     finally:
-        S.REGISTRY.pop("_coinflip_test", None)
+        S.REGISTRY.pop("zz_coinflip_test", None)

@@ -9,15 +9,55 @@ import pandas as pd
 from .evaluate import metrics
 
 
+NULL = "_null"
+
+# Strategy category -> family, for weight caps (correlated methods share a budget).
+FAMILY = {
+    "momentum": "trend", "breakout": "trend", "volatility": "trend",
+    "mean_reversion": "reversal", "regime": "reversal",
+    "order_flow": "flow", "seasonality": "seasonal",
+}
+
+
 def combine(scores: dict[str, pd.Series], weights: dict[str, float]) -> pd.Series:
-    """Weighted average of strategy scores, ignoring strategies still warming up."""
+    """Weighted average of strategy scores, ignoring strategies still warming up.
+    The null expert (key ``_null``) always says 0, so its weight shrinks the
+    ensemble toward abstention when the real strategies are not trusted."""
     names = [k for k in scores if weights.get(k, 0.0) > 0]
     if not names:
         idx = next(iter(scores.values())).index if scores else pd.DatetimeIndex([])
         return pd.Series(np.nan, index=idx)
+    null = weights.get(NULL, 0.0)
     num = sum(weights[k] * scores[k].fillna(0.0) for k in names)
     den = sum(weights[k] * scores[k].notna().astype(float) for k in names)
-    return (num / den.replace(0.0, np.nan)).clip(-1.0, 1.0)
+    out = num / (den + null * (den > 0)).replace(0.0, np.nan)
+    return out.clip(-1.0, 1.0)
+
+
+def effective_weights(learned: dict[str, float], families: dict[str, str], equal_blend: float,
+                      max_method: float, max_family: float) -> dict[str, float]:
+    """Weights actually used to combine: learned (Hedge) weights shrunk toward
+    equal weights, then capped per method and per family. Capped-off mass goes
+    to the null expert. ``learned`` may include ``_null``."""
+    learned = normalise(learned)
+    k = len(learned)
+    w = {n: (1 - equal_blend) * v + equal_blend / k for n, v in learned.items()}
+    null = w.pop(NULL, 0.0)
+    excess = 0.0
+    for n in w:
+        if w[n] > max_method:
+            excess += w[n] - max_method
+            w[n] = max_method
+    for fam in set(families.get(n, n) for n in w):
+        members = [n for n in w if families.get(n, n) == fam]
+        tot = sum(w[n] for n in members)
+        if tot > max_family:
+            excess += tot - max_family
+            for n in members:
+                w[n] *= max_family / tot
+    if null or excess:
+        w[NULL] = null + excess
+    return {n: round(v, 6) for n, v in w.items()}
 
 
 def hedge_update(weights: dict[str, float], gains: dict[str, float], eta: float,

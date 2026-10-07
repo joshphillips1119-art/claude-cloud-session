@@ -27,19 +27,29 @@ class Config:
     horizon_bars: int = 1
     label_mode: str = "close_to_close"   # or "open_to_close" for prediction markets
     cost_bps_round_trip: float = 10.0    # fees + slippage, for net-edge reporting
-    lookback_days: int = 14              # tuning window (train + validation)
-    validation_days: int = 3             # most recent days held out from training
+    # Tuning window. Distinguishing 52% from 50% takes ~3,900 bars (~13.5 days of
+    # 5m bars), so anything much shorter than 30 days re-fits noise.
+    lookback_days: int = 30              # tuning window (train + validation)
+    validation_days: int = 5             # most recent days held out from training
     warmup_days: int = 2                 # extra history so indicators are warm
-    min_signals: int = 100               # minimum calls in the training window
-    min_val_signals: int = 30
+    min_signals: int = 300               # minimum calls in the training window
+    min_val_signals: int = 100
     adopt_min_gain: float = 1.0          # train wz improvement needed to change params
-    max_candidates: int = 64
+    max_candidates: int = 48             # configurations scored per strategy per day
+    plateau: bool = True                 # select by the mean of a config and its grid neighbours
+    luck_hurdle: bool = True             # best train wz must beat E[max of N null z-scores]
+    one_step: bool = True                # params move at most one grid step per axis per day
+    sign_flip_min_day_frac: float = 0.65 # a momentum<->reversal flip needs this share of winning days
     hedge_eta: float = 0.3
     hedge_share: float = 0.05
+    null_expert: bool = True             # an always-abstain expert absorbs weight when nothing works
+    equal_blend: float = 0.5             # effective weight = (1-b)*learned + b*equal (combination puzzle)
+    max_method_weight: float = 0.35
+    max_family_weight: float = 0.5
     threshold_grid: list = field(default_factory=lambda: [0.0, 0.05, 0.1, 0.15, 0.2, 0.25, 0.3, 0.4, 0.5])
     min_coverage: float = 0.10
     threshold_min_gain: float = 0.5
-    trial_min_train_wz: float = 2.0      # bar for adopting a brand-new strategy
+    trial_min_train_wz: float = 3.0      # bar for a brand-new strategy (Harvey-Liu-Zhu t >= 3)
     guardrail_days: int = 5
     guardrail_z: float = -2.0
     data_dir: str = "data"

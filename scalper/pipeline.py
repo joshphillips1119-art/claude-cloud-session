@@ -16,7 +16,7 @@ import pandas as pd
 from . import strategies as S
 from .analysis import analyse_day
 from .config import Config
-from .ensemble import combine, hedge_update, normalise, tune_threshold
+from .ensemble import FAMILY, NULL, combine, effective_weights, hedge_update, normalise, tune_threshold
 from .evaluate import baselines, forward_returns, metrics, window_mask
 from .optimize import optimise_strategy
 from .state import clone
@@ -47,8 +47,19 @@ def score_all(df: pd.DataFrame, state: dict, names: list[str]) -> dict[str, pd.S
     return {n: S.compute(n, df, state["strategies"][n]["params"]) for n in names}
 
 
-def weights_of(state: dict, names: list[str]) -> dict[str, float]:
-    return normalise({n: state["strategies"][n]["weight"] for n in names})
+def learned_weights(state: dict, names: list[str], cfg: Config) -> dict[str, float]:
+    w = {n: state["strategies"][n]["weight"] for n in names}
+    if cfg.null_expert:
+        w[NULL] = state["ensemble"].get("null_weight", sum(w.values()) / max(1, len(w)))
+    return w
+
+
+def weights_of(state: dict, names: list[str], cfg: Config) -> dict[str, float]:
+    """Effective combination weights (learned, blended toward equal, capped)."""
+    reg = S.load_all()
+    fams = {n: FAMILY.get(reg[n].category, reg[n].category) for n in names}
+    return effective_weights(learned_weights(state, names, cfg), fams, cfg.equal_blend,
+                             cfg.max_method_weight, cfg.max_family_weight)
 
 
 def pooled_z(rows: list[dict], key: str = "ensemble") -> tuple[int, int, float]:
@@ -78,7 +89,7 @@ def run_day(df_all: pd.DataFrame, state: dict, cfg: Config, day: str,
     if not names:
         raise ValueError("no active strategies have the inputs they need in this data")
     scores = score_all(df, state, names)
-    w = weights_of(state, names)
+    w = weights_of(state, names, cfg)
     ens = combine(scores, w)
     thr = state["ensemble"]["threshold"]
     oos = {
@@ -98,8 +109,10 @@ def run_day(df_all: pd.DataFrame, state: dict, cfg: Config, day: str,
 
     # 3. Online weights: fixed-share Hedge on each strategy's confidence-weighted z.
     gains = {n: oos["strategies"][n]["wz"] for n in names}
-    hw = hedge_update({n: state["strategies"][n]["weight"] for n in names}, gains,
-                      cfg.hedge_eta, cfg.hedge_share)
+    gains[NULL] = 0.0
+    hw = hedge_update(learned_weights(state, names, cfg), gains, cfg.hedge_eta, cfg.hedge_share)
+    if NULL in hw:
+        new["ensemble"]["null_weight"] = hw[NULL]
     for n in names:
         old = state["strategies"][n]["weight"]
         new["strategies"][n]["weight"] = hw[n]
@@ -132,7 +145,7 @@ def run_day(df_all: pd.DataFrame, state: dict, cfg: Config, day: str,
     # 6. Abstention threshold on the tuned ensemble.
     names2 = active(new, df)
     scores2 = score_all(df, new, names2)
-    ens2 = combine(scores2, weights_of(new, names2))
+    ens2 = combine(scores2, weights_of(new, names2, cfg))
     win = window_mask(df.index, days)
     th = tune_threshold(ens2[win], fwd[win], cfg.threshold_grid, thr, cfg.min_coverage, cfg.threshold_min_gain)
     if th["changed"]:
@@ -148,9 +161,11 @@ def run_day(df_all: pd.DataFrame, state: dict, cfg: Config, day: str,
     report["guardrail"] = {"days": len(recent), "n": n_r, "hits": hits_r, "z": round(z_r, 3), "tripped": False}
     if len(recent) >= cfg.guardrail_days and z_r <= cfg.guardrail_z:
         report["guardrail"]["tripped"] = True
-        uni = round(1.0 / len(names2), 6)
+        uni = round(1.0 / (len(names2) + (1 if cfg.null_expert else 0)), 6)
         for n in names2:
             new["strategies"][n]["weight"] = uni
+        if cfg.null_expert:
+            new["ensemble"]["null_weight"] = uni
         raised = min(max(cfg.threshold_grid), new["ensemble"]["threshold"] + 0.1)
         new["ensemble"]["threshold"] = raised
         changes.append({"date": day, "kind": "guardrail", "z": round(z_r, 3), "threshold": raised})
@@ -159,22 +174,29 @@ def run_day(df_all: pd.DataFrame, state: dict, cfg: Config, day: str,
     new["as_of"] = day
     new["last_run"] = day
     report["changes"] = changes
-    report["weights"] = weights_of(new, names2)
+    report["weights"] = weights_of(new, names2, cfg)
     report["state_version"] = new["version"]
     return new, report
 
 
 def run_trials(df, state, cfg, day, fwd, train, val, changes) -> dict:
+    """Trial registered strategies that are not in the live ensemble yet.
+
+    The gate is stricter than for re-tuning an existing strategy: the best
+    plateau config must clear max(trial_min_train_wz, luck hurdle) on training,
+    be positive on validation, and not make the ensemble worse on validation
+    when added at an average weight."""
     reg = S.load_all()
     cands = state.setdefault("candidates", {})
     out = {}
     names = active(state, df)
     base_scores = score_all(df, state, names)
-    base_w = weights_of(state, names)
-    base_ens = combine(base_scores, base_w)
-    base_val = metrics(base_ens[val], fwd[val])
+    base_learned = learned_weights(state, names, cfg)
+    fams = {n: FAMILY.get(reg[n].category, reg[n].category) for n in reg}
+    base_w = effective_weights(base_learned, fams, cfg.equal_blend, cfg.max_method_weight, cfg.max_family_weight)
+    base_val = metrics(combine(base_scores, base_w)[val], fwd[val])
     for n, strat in sorted(reg.items()):
-        if n in state["strategies"]:
+        if n in state["strategies"] or n.startswith("_"):
             continue
         info = cands.get(n, {})
         last = info.get("last_trial")
@@ -184,16 +206,17 @@ def run_trials(df, state, cfg, day, fwd, train, val, changes) -> dict:
             out[n] = {"status": "skipped", "reason": "missing inputs"}
             continue
         res = optimise_strategy(n, df, fwd, train, val, S.canonical(strat, strat.defaults), cfg, seed_key=day)
-        best = res["best"]
+        best = res["target"]
         p = best["params"]
         s_new = S.compute(n, df, p)
-        mean_w = float(np.mean(list(base_w.values()))) if base_w else 1.0
-        trial_w = {**base_w, n: mean_w}
-        ens_with = combine({**base_scores, n: s_new}, normalise(trial_w))
-        with_val = metrics(ens_with[val], fwd[val])
+        mean_w = float(np.mean([v for k, v in base_learned.items() if k != NULL])) if base_learned else 1.0
+        with_w = effective_weights({**base_learned, n: mean_w}, fams, cfg.equal_blend,
+                                   cfg.max_method_weight, cfg.max_family_weight)
+        with_val = metrics(combine({**base_scores, n: s_new}, with_w)[val], fwd[val])
+        bar_ = max(cfg.trial_min_train_wz, res["hurdle"] or 0.0)
         passed = (
             best["train"]["n"] >= cfg.min_signals
-            and best["train"]["wz"] >= cfg.trial_min_train_wz
+            and best["train"]["wz"] >= bar_
             and best["val"]["wz"] > 0
             and with_val["wz"] >= base_val["wz"]
         )
@@ -203,6 +226,8 @@ def run_trials(df, state, cfg, day, fwd, train, val, changes) -> dict:
             "params": p,
             "train": best["train"],
             "val": best["val"],
+            "bar": round(bar_, 3),
+            "n_configs": res["n_candidates"],
             "ensemble_val_wz": [base_val["wz"], with_val["wz"]],
             "trials": info.get("trials", 0) + 1,
         }

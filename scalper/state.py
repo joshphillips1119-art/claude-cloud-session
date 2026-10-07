@@ -25,12 +25,12 @@ CORE = [
 def initial_state(names: list[str] | None = None) -> dict:
     reg = S.load_all()
     names = [n for n in (names or CORE) if n in reg]
-    w = round(1.0 / len(names), 6)
+    w = round(1.0 / (len(names) + 1), 6)  # +1: the null (abstain) expert
     return {
         "version": 0,
         "as_of": None,
         "last_run": None,
-        "ensemble": {"threshold": 0.1},
+        "ensemble": {"threshold": 0.1, "null_weight": w},
         "strategies": {
             n: {"params": S.canonical(reg[n], reg[n].defaults), "weight": w, "enabled": True, "added": None}
             for n in names
