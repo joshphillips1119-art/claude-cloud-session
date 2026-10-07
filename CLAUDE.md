@@ -103,6 +103,12 @@ def my_slug(df, n, k):
 The framework adds `_sign` in {+1, -1} so the tuner can flip momentum and
 reversal. Set `invertible=False` only when the flip is meaningless.
 
+Causal helpers in `scalper/indicators.py`: `ema`, `wilder`, `rsi`, `atr`,
+`zscore`, `realized_vol`, `session_vwap`, `rolling_autocorr`, `same_slot`
+(same time-of-day statistic over previous days), `seasonal_vol_factor`
+(removes the intraday volatility smile), `bvc_buy_fraction` (buy-volume share
+estimate for venues without taker data), and `squash` (tanh into [-1, 1]).
+
 ## Layout
 
 | path | what |

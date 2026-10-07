@@ -85,3 +85,45 @@ def squash(x: pd.Series, scale: float = 1.0) -> pd.Series:
 
 def rolling_autocorr(r: pd.Series, n: int, lag: int = 1) -> pd.Series:
     return r.rolling(n, min_periods=n).corr(r.shift(lag))
+
+
+def slot_index(index: pd.DatetimeIndex, minutes: int = 5) -> pd.Series:
+    """Time-of-day slot of each bar (0..287 for 5-minute bars, UTC)."""
+    return pd.Series((index.hour * 60 + index.minute) // minutes, index=index)
+
+
+def same_slot(x: pd.Series, n_days: int, stat: str = "median", min_days: int | None = None) -> pd.Series:
+    """``stat`` of ``x`` at the same time-of-day slot over the previous ``n_days``
+    occurrences (strictly earlier days, so causal). The building block for
+    de-seasonalising volume, volatility and trade counts."""
+    slot = slot_index(x.index)
+    k = min_days or max(2, n_days // 2)
+    return x.groupby(slot.values, group_keys=False).transform(
+        lambda s: getattr(s.shift(1).rolling(n_days, min_periods=k), stat)())
+
+
+def seasonal_vol_factor(close: pd.Series, n_days: int = 10) -> pd.Series:
+    """Typical |return| at this time of day relative to the all-day typical |return|.
+    Divide a raw return by (vol * factor) to remove the intraday volatility smile."""
+    a = log_returns(close).abs()
+    slot_level = same_slot(a, n_days, "mean")
+    overall = a.rolling(288 * n_days, min_periods=288).mean().shift(1)
+    return (slot_level / overall.replace(0.0, np.nan)).clip(0.25, 4.0)
+
+
+def norm_cdf(x) -> np.ndarray:
+    """Standard normal CDF without scipy (Abramowitz-Stegun 7.1.26, |err| < 1.5e-7)."""
+    x = np.asarray(x, dtype=float)
+    z = np.abs(x) / np.sqrt(2.0)
+    t = 1.0 / (1.0 + 0.3275911 * z)
+    poly = t * (0.254829592 + t * (-0.284496736 + t * (1.421413741 + t * (-1.453152027 + t * 1.061405429))))
+    erf = 1.0 - poly * np.exp(-z * z)
+    return 0.5 * (1.0 + np.sign(x) * erf)
+
+
+def bvc_buy_fraction(close: pd.Series, n: int = 48) -> pd.Series:
+    """Bulk volume classification (Easley, Lopez de Prado, O'Hara): estimated share
+    of a bar's volume that was buyer-initiated, for venues without taker data."""
+    dp = close.diff()
+    sd = rolling_std(dp, n).shift(1)
+    return pd.Series(norm_cdf(dp / sd.replace(0.0, np.nan)), index=close.index).where(sd.notna())

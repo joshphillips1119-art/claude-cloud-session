@@ -12,7 +12,7 @@ from scalper import strategies as S
 
 S.load_all()
 NAMES = sorted(S.REGISTRY)
-CUTS = [400, 777, 1100, 1500]
+CUTS = [400, 1100, 2000, 3000]
 
 
 @pytest.mark.parametrize("name", NAMES)
@@ -74,3 +74,34 @@ def test_registry_metadata():
     for name, strat in S.REGISTRY.items():
         assert strat.category and strat.description, name
         assert 1 <= len(S.full_grid(strat)) <= 400, f"{name}: grid too large to tune daily"
+
+
+def test_indicator_helpers_are_causal(bars):
+    from scalper import indicators as ind
+
+    big = __import__("scalper.synthetic", fromlist=["generate"]).generate(12, seed=4)
+    fns = {
+        "same_slot": lambda d: ind.same_slot(np.log(d["volume"]), 5),
+        "seasonal_vol_factor": lambda d: ind.seasonal_vol_factor(d["close"], 5),
+        "bvc": lambda d: ind.bvc_buy_fraction(d["close"]),
+        "session_vwap": lambda d: ind.session_vwap(d),
+    }
+    for name, fn in fns.items():
+        full = fn(big)
+        for k in (1500, 2600, 3000):
+            part = fn(big.iloc[: k + 1])
+            a, b = part.to_numpy(), full.iloc[: k + 1].to_numpy()
+            assert (np.isnan(a) == np.isnan(b)).all(), name
+            m = ~np.isnan(a)
+            assert np.allclose(a[m], b[m]), name
+        assert full.iloc[-288:].notna().mean() > 0.9, f"{name} never warms up"
+
+
+def test_norm_cdf_accuracy():
+    from math import erf, sqrt
+
+    from scalper.indicators import norm_cdf
+
+    xs = np.linspace(-5, 5, 101)
+    exact = np.array([0.5 * (1 + erf(x / sqrt(2))) for x in xs])
+    assert np.max(np.abs(norm_cdf(xs) - exact)) < 1e-6
