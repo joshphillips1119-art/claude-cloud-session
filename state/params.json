@@ -1,0 +1,111 @@
+{
+ "version": 1,
+ "as_of": "2026-10-06",
+ "last_run": "2026-10-06",
+ "ensemble": {
+  "threshold": 0.15,
+  "null_weight": 0.091124
+ },
+ "strategies": {
+  "momentum": {
+   "params": {
+    "n": 3,
+    "scale": 1.0,
+    "_sign": 1
+   },
+   "weight": 0.086696,
+   "enabled": true,
+   "added": null
+  },
+  "rsi_reversion": {
+   "params": {
+    "n": 14,
+    "band": 20.0,
+    "_sign": 1
+   },
+   "weight": 0.099591,
+   "enabled": true,
+   "added": null
+  },
+  "bollinger_reversion": {
+   "params": {
+    "n": 20,
+    "k": 2.0,
+    "_sign": 1
+   },
+   "weight": 0.10562,
+   "enabled": true,
+   "added": null
+  },
+  "vwap_reversion": {
+   "params": {
+    "n": 48,
+    "k": 1.0,
+    "_sign": 1
+   },
+   "weight": 0.078397,
+   "enabled": true,
+   "added": null
+  },
+  "ema_trend": {
+   "params": {
+    "fast": 8,
+    "slow": 34,
+    "_sign": 1
+   },
+   "weight": 0.098063,
+   "enabled": true,
+   "added": null
+  },
+  "donchian_breakout": {
+   "params": {
+    "n": 24,
+    "_sign": 1
+   },
+   "weight": 0.05148,
+   "enabled": true,
+   "added": null
+  },
+  "shock_reversal": {
+   "params": {
+    "k": 3.0,
+    "_sign": 1
+   },
+   "weight": 0.135841,
+   "enabled": true,
+   "added": null
+  },
+  "autocorr_adaptive": {
+   "params": {
+    "n": 96,
+    "gain": 5.0,
+    "_sign": 1
+   },
+   "weight": 0.101027,
+   "enabled": true,
+   "added": null
+  },
+  "taker_flow": {
+   "params": {
+    "n": 6,
+    "z_n": 288,
+    "scale": 2.0,
+    "_sign": -1
+   },
+   "weight": 0.088591,
+   "enabled": true,
+   "added": null
+  },
+  "close_location": {
+   "params": {
+    "n": 1,
+    "scale": 0.5,
+    "_sign": 1
+   },
+   "weight": 0.06357,
+   "enabled": true,
+   "added": null
+  }
+ },
+ "candidates": {}
+}
