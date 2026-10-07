@@ -255,6 +255,25 @@ def backtest(df_all: pd.DataFrame, state: dict, cfg: Config, days: list[str], lo
     return state, board, reports
 
 
+def edge_evidence(hits: int, n: int, lam: float = 0.04) -> dict:
+    """Anytime-valid evidence that the hit rate beats 50% (betting martingale).
+
+    Betting a fraction ``lam`` on every call being right turns 1 unit of wealth
+    into K = (1+lam)^hits * (1-lam)^misses. Under a true 50% hit rate K is a
+    martingale, so by Ville's inequality P(K ever >= 20) <= 5%, however often it
+    is checked. This is the right statistic to watch daily; repeated z-tests are
+    not (a daily 5% z-test "finds" an edge in ~24% of 30-day coin-flip runs).
+    lam = 0.04 is tuned for a true rate near 52%."""
+    misses = n - hits
+    log_k = hits * math.log1p(lam) + misses * math.log1p(-lam)
+    log_k_against = hits * math.log1p(-lam) + misses * math.log1p(lam)
+    return {
+        "log10_K": round(log_k / math.log(10), 3),
+        "edge_confirmed": log_k >= math.log(20),
+        "worse_than_coin_confirmed": log_k_against >= math.log(20),
+    }
+
+
 def summarise_board(board: list[dict]) -> dict:
     n, hits, z = pooled_z(board)
     n_all, hits_all, z_all = pooled_z(board, "ensemble_all")
@@ -273,4 +292,23 @@ def summarise_board(board: list[dict]) -> dict:
     gross = [r["ensemble"]["gross_bps"] * r["ensemble"]["n"] for r in board if r["ensemble"]["n"]]
     out["ensemble"]["gross_bps_per_call"] = round(sum(gross) / n, 3) if n else None
     out["ensemble"]["net_bps_per_call"] = round(sum(net) / n, 3) if n else None
+    out["ensemble"]["evidence"] = edge_evidence(hits, n)
+    out["ensemble_all"]["evidence"] = edge_evidence(hits_all, n_all)
     return out
+
+
+def strategy_table(board: list[dict]) -> dict:
+    """Pooled out-of-sample record of each strategy across the given days."""
+    agg: dict[str, dict] = {}
+    for r in board:
+        for name, m in r.get("strategies", {}).items():
+            a = agg.setdefault(name, {"days": 0, "n": 0, "hits": 0, "wz_sum": 0.0})
+            a["days"] += 1
+            a["n"] += m["n"]
+            a["hits"] += m["hits"]
+            a["wz_sum"] += m["wz"]
+    for a in agg.values():
+        a["acc"] = round(a["hits"] / a["n"], 4) if a["n"] else None
+        a["z"] = round((a["hits"] - a["n"] / 2) / math.sqrt(a["n"] / 4), 3) if a["n"] else 0.0
+        a["mean_daily_wz"] = round(a.pop("wz_sum") / a["days"], 3)
+    return dict(sorted(agg.items(), key=lambda kv: -kv[1]["z"]))

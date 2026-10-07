@@ -111,3 +111,12 @@ def test_expected_max_z_and_step_toward():
     cur = {"n": 1, "scale": 0.5, "_sign": 1}
     nxt = step_toward(strat, cur, {"n": 12, "scale": 2.0, "_sign": -1})
     assert nxt == {"n": 2, "scale": 1.0, "_sign": -1}
+
+
+def test_edge_evidence_martingale():
+    from scalper.pipeline import edge_evidence
+
+    assert not edge_evidence(500, 1000)["edge_confirmed"]
+    assert edge_evidence(2100, 4000)["edge_confirmed"]          # 52.5% over 4,000 calls
+    assert edge_evidence(1900, 4000)["worse_than_coin_confirmed"]
+    assert abs(edge_evidence(0, 0)["log10_K"]) < 1e-12

@@ -105,6 +105,12 @@ def render(report: dict, cfg_dict: dict, summary: dict | None = None, notes: lis
         e = summary["ensemble"]
         L.append(f"- All {summary['days']} scored days: ensemble acc {_pct(e['acc'])} over {e['n']} calls (z={e['z']}), "
                  f"net {e.get('net_bps_per_call')} bps/call; always-up baseline {_pct(summary['baselines']['always_up']['acc'])}")
+        ev = e.get("evidence") or {}
+        if ev:
+            verdict = ("edge CONFIRMED (K >= 20)" if ev["edge_confirmed"] else
+                       "worse than a coin flip (confirmed)" if ev["worse_than_coin_confirmed"] else "not yet conclusive")
+            L.append(f"- Anytime-valid evidence of edge: log10 K = {ev['log10_K']} -> {verdict}. "
+                     f"Only this statistic, not daily z-scores, can be checked every day without inflating false alarms.")
     L.append("")
     if notes:
         L += ["## 6. Notes", ""] + [f"- {n}" for n in notes] + [""]

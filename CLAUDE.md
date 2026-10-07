@@ -62,15 +62,20 @@ scalps, find a new method every day"*. This file says exactly how.
    pushes both the session branch and `claude/scalper-live`.
 
 7. **Notify the user only if something needs them:** `DATA_UNAVAILABLE`, the
-   guardrail tripped, a test you could not fix, or a sync conflict. Also
-   notify once a week (Mondays) with the 7-day out-of-sample hit rate vs the
-   baselines. Lead with the number.
+   guardrail tripped, a test you could not fix, a sync conflict, or the
+   anytime-valid evidence (`log10_K` in the journal's track record) newly
+   crossing into "edge CONFIRMED" or "worse than a coin flip". Also notify
+   once a week (Mondays) with `python -m scalper report --days 7`: the 7-day
+   out-of-sample hit rate with its 95% interval vs the baselines, the best and
+   worst strategies, and what was adopted or rejected. Lead with the number.
 
 ## Honesty rules (non-negotiable)
 
 * The only performance figures that count are in `state/scoreboard.jsonl`:
   each day scored with params chosen **before** that day. Never quote
   training/tuning numbers as accuracy.
+* Judge "is there an edge yet?" by the betting-martingale evidence
+  (`log10_K >= 1.30`, i.e. K >= 20), never by re-running a z-test each day.
 * Always compare against the baselines in the journal (always-up,
   persistence, anti-persistence) and quote the 95% interval. At 5 minutes,
   52-55% is a real edge and 60%+ on a few hundred calls is usually luck.

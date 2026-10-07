@@ -14,7 +14,7 @@ from . import strategies as S
 from .config import ROOT, load
 from .data import Store, import_csv
 from .journal import render
-from .pipeline import backtest, run_day, summarise_board, window_days
+from .pipeline import backtest, run_day, strategy_table, summarise_board, window_days
 from .state import StateStore, initial_state
 
 EXIT_DATA_UNAVAILABLE = 2
@@ -220,6 +220,28 @@ def cmd_status(args, cfg):
     return 0
 
 
+def cmd_report(args, cfg):
+    """Out-of-sample summary of the last N scored days (for the weekly check-in)."""
+    board = StateStore(cfg).scoreboard()
+    if not board:
+        print(json.dumps({"status": "NO_HISTORY"}))
+        return 0
+    last = board[-args.days:]
+    regimes: dict[str, int] = {}
+    for r in last:
+        regimes[r.get("regime") or "unknown"] = regimes.get(r.get("regime") or "unknown", 0) + 1
+    print(json.dumps(clean({
+        "window": [last[0]["date"], last[-1]["date"]],
+        "summary": summarise_board(last),
+        "all_time": summarise_board(board),
+        "strategies": strategy_table(last),
+        "regimes": regimes,
+        "daily": [{"date": r["date"], "acc": r["ensemble"]["acc"], "n": r["ensemble"]["n"],
+                   "acc_all": r["ensemble_all"]["acc"], "threshold": r.get("threshold")} for r in last],
+    }), indent=1))
+    return 0
+
+
 def cmd_import_csv(args, cfg):
     days = import_csv(cfg, Path(args.path), args.source)
     print(f"imported {len(days)} days: {days[0]}..{days[-1]}" if days else "nothing imported")
@@ -257,6 +279,7 @@ def main(argv=None) -> int:
     s.add_argument("name"); s.add_argument("--date"); s.add_argument("--adopt", action="store_true")
     s.add_argument("--no-fetch", action="store_true")
     sub.add_parser("status")
+    s = sub.add_parser("report", help="out-of-sample summary of the last N days"); s.add_argument("--days", type=int, default=7)
     s = sub.add_parser("import-csv"); s.add_argument("path"); s.add_argument("--source", default="manual")
     s = sub.add_parser("synth"); s.add_argument("--days", type=int, default=20); s.add_argument("--start", default="2026-09-01")
     s.add_argument("--seed", type=int, default=0); s.add_argument("--phi", type=float, default=0.0)
@@ -268,7 +291,7 @@ def main(argv=None) -> int:
         cfg.symbol = args.symbol
     return {
         "init": cmd_init, "fetch": cmd_fetch, "daily": cmd_daily, "backtest": cmd_backtest,
-        "status": cmd_status, "trial": cmd_trial, "import-csv": cmd_import_csv, "synth": cmd_synth,
+        "status": cmd_status, "report": cmd_report, "trial": cmd_trial, "import-csv": cmd_import_csv, "synth": cmd_synth,
     }[args.cmd](args, cfg)
 
 
