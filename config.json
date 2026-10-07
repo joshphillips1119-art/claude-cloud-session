@@ -1,0 +1,11 @@
+{
+ "_comment": "Market + learning settings. See scalper/config.py for every key and its meaning.",
+ "symbol": "BTCUSDT",
+ "sources": ["binance", "binance_vision", "binance_us", "bybit", "okx", "coinbase", "kraken"],
+ "symbol_map": {"coinbase": "BTC-USD", "kraken": "XBTUSD", "okx": "BTC-USDT", "yahoo": "BTC-USD"},
+ "horizon_bars": 1,
+ "label_mode": "close_to_close",
+ "cost_bps_round_trip": 10.0,
+ "lookback_days": 14,
+ "validation_days": 3
+}
