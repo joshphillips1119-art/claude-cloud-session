@@ -10,3 +10,15 @@
 {"date": "2026-10-06", "kind": "weight", "strategy": "close_location", "from": 0.090909, "to": 0.06357, "gain_wz": -1.277}
 {"date": "2026-10-06", "kind": "params", "strategy": "taker_flow", "from": {"n": 3, "z_n": 288, "scale": 1.0, "_sign": 1}, "to": {"n": 6, "z_n": 288, "scale": 2.0, "_sign": -1}, "train_wz": [-1.756, 3.674], "val_wz": [-0.662, 0.791]}
 {"date": "2026-10-06", "kind": "threshold", "from": 0.1, "to": 0.15}
+{"date": "2026-10-07", "kind": "weight", "strategy": "momentum", "from": 0.086696, "to": 0.066887, "gain_wz": -0.856}
+{"date": "2026-10-07", "kind": "weight", "strategy": "rsi_reversion", "from": 0.099591, "to": 0.132669, "gain_wz": 1.083}
+{"date": "2026-10-07", "kind": "weight", "strategy": "bollinger_reversion", "from": 0.10562, "to": 0.121674, "gain_wz": 0.588}
+{"date": "2026-10-07", "kind": "weight", "strategy": "vwap_reversion", "from": 0.078397, "to": 0.079083, "gain_wz": 0.075}
+{"date": "2026-10-07", "kind": "weight", "strategy": "ema_trend", "from": 0.098063, "to": 0.082962, "gain_wz": -0.502}
+{"date": "2026-10-07", "kind": "weight", "strategy": "donchian_breakout", "from": 0.05148, "to": 0.049805, "gain_wz": -0.186}
+{"date": "2026-10-07", "kind": "weight", "strategy": "shock_reversal", "from": 0.135841, "to": 0.118649, "gain_wz": -0.338}
+{"date": "2026-10-07", "kind": "weight", "strategy": "autocorr_adaptive", "from": 0.101027, "to": 0.081177, "gain_wz": -0.678}
+{"date": "2026-10-07", "kind": "weight", "strategy": "taker_flow", "from": 0.088591, "to": 0.137399, "gain_wz": 1.594}
+{"date": "2026-10-07", "kind": "weight", "strategy": "close_location", "from": 0.06357, "to": 0.040439, "gain_wz": -1.662}
+{"date": "2026-10-07", "kind": "params", "strategy": "momentum", "from": {"n": 3, "scale": 1.0, "_sign": 1}, "to": {"n": 6, "scale": 2.0, "_sign": -1}, "train_wz": [-1.138, 3.815], "val_wz": [-0.623, 0.38]}
+{"date": "2026-10-07", "kind": "enable", "strategy": "short_horizon_reversal", "params": {"K": 6, "lam": 1.0, "mode": "mag", "w0": 0.5}, "train_wz": 3.509, "val_wz": 0.561}

@@ -1,19 +1,19 @@
 {
- "version": 2,
- "as_of": "2026-10-07",
- "last_run": "2026-10-07",
+ "version": 1,
+ "as_of": "2026-10-06",
+ "last_run": "2026-10-06",
  "ensemble": {
   "threshold": 0.15,
-  "null_weight": 0.089256
+  "null_weight": 0.091124
  },
  "strategies": {
   "momentum": {
    "params": {
-    "n": 6,
-    "scale": 2.0,
-    "_sign": -1
+    "n": 3,
+    "scale": 1.0,
+    "_sign": 1
    },
-   "weight": 0.066887,
+   "weight": 0.086696,
    "enabled": true,
    "added": null
   },
@@ -23,7 +23,7 @@
     "band": 20.0,
     "_sign": 1
    },
-   "weight": 0.132669,
+   "weight": 0.099591,
    "enabled": true,
    "added": null
   },
@@ -33,7 +33,7 @@
     "k": 2.0,
     "_sign": 1
    },
-   "weight": 0.121674,
+   "weight": 0.10562,
    "enabled": true,
    "added": null
   },
@@ -43,7 +43,7 @@
     "k": 1.0,
     "_sign": 1
    },
-   "weight": 0.079083,
+   "weight": 0.078397,
    "enabled": true,
    "added": null
   },
@@ -53,7 +53,7 @@
     "slow": 34,
     "_sign": 1
    },
-   "weight": 0.082962,
+   "weight": 0.098063,
    "enabled": true,
    "added": null
   },
@@ -62,7 +62,7 @@
     "n": 24,
     "_sign": 1
    },
-   "weight": 0.049805,
+   "weight": 0.05148,
    "enabled": true,
    "added": null
   },
@@ -71,7 +71,7 @@
     "k": 3.0,
     "_sign": 1
    },
-   "weight": 0.118649,
+   "weight": 0.135841,
    "enabled": true,
    "added": null
   },
@@ -81,7 +81,7 @@
     "gain": 5.0,
     "_sign": 1
    },
-   "weight": 0.081177,
+   "weight": 0.101027,
    "enabled": true,
    "added": null
   },
@@ -92,7 +92,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.137399,
+   "weight": 0.088591,
    "enabled": true,
    "added": null
   },
@@ -102,63 +102,10 @@
     "scale": 0.5,
     "_sign": 1
    },
-   "weight": 0.040439,
+   "weight": 0.06357,
    "enabled": true,
    "added": null
-  },
-  "short_horizon_reversal": {
-   "params": {
-    "K": 6,
-    "lam": 1.0,
-    "mode": "mag",
-    "w0": 0.5
-   },
-   "weight": 0.040439,
-   "enabled": true,
-   "added": "2026-10-07"
   }
  },
- "candidates": {
-  "short_horizon_reversal": {
-   "status": "enabled",
-   "last_trial": "2026-10-07",
-   "params": {
-    "K": 6,
-    "lam": 1.0,
-    "mode": "mag",
-    "w0": 0.5
-   },
-   "train": {
-    "n": 7172,
-    "hits": 3732,
-    "acc": 0.5204,
-    "acc_lo": 0.5088,
-    "acc_hi": 0.5319,
-    "z": 3.448,
-    "wz": 3.509,
-    "coverage": 1.0,
-    "gross_bps": 0.127,
-    "net_bps": 0.127
-   },
-   "val": {
-    "n": 1425,
-    "hits": 724,
-    "acc": 0.5081,
-    "acc_lo": 0.4821,
-    "acc_hi": 0.534,
-    "z": 0.609,
-    "wz": 0.561,
-    "coverage": 1.0,
-    "gross_bps": 0.049,
-    "net_bps": 0.049
-   },
-   "bar": 3.0,
-   "n_configs": 24,
-   "ensemble_val_wz": [
-    0.342,
-    0.361
-   ],
-   "trials": 1
-  }
- }
+ "candidates": {}
 }
