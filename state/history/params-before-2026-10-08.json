@@ -1,10 +1,10 @@
 {
- "version": 3,
- "as_of": "2026-10-08",
- "last_run": "2026-10-08",
+ "version": 2,
+ "as_of": "2026-10-07",
+ "last_run": "2026-10-07",
  "ensemble": {
   "threshold": 0.15,
-  "null_weight": 0.078637
+  "null_weight": 0.089256
  },
  "strategies": {
   "momentum": {
@@ -13,7 +13,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.07096,
+   "weight": 0.066887,
    "enabled": true,
    "added": null
   },
@@ -23,7 +23,7 @@
     "band": 20.0,
     "_sign": 1
    },
-   "weight": 0.126012,
+   "weight": 0.132669,
    "enabled": true,
    "added": null
   },
@@ -33,7 +33,7 @@
     "k": 2.0,
     "_sign": 1
    },
-   "weight": 0.136396,
+   "weight": 0.121674,
    "enabled": true,
    "added": null
   },
@@ -43,7 +43,7 @@
     "k": 1.0,
     "_sign": 1
    },
-   "weight": 0.099282,
+   "weight": 0.079083,
    "enabled": true,
    "added": null
   },
@@ -53,7 +53,7 @@
     "slow": 34,
     "_sign": 1
    },
-   "weight": 0.071058,
+   "weight": 0.082962,
    "enabled": true,
    "added": null
   },
@@ -62,7 +62,7 @@
     "n": 24,
     "_sign": 1
    },
-   "weight": 0.033738,
+   "weight": 0.049805,
    "enabled": true,
    "added": null
   },
@@ -71,7 +71,7 @@
     "k": 3.0,
     "_sign": 1
    },
-   "weight": 0.109978,
+   "weight": 0.118649,
    "enabled": true,
    "added": null
   },
@@ -81,7 +81,7 @@
     "gain": 5.0,
     "_sign": 1
    },
-   "weight": 0.055161,
+   "weight": 0.081177,
    "enabled": true,
    "added": null
   },
@@ -92,7 +92,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.14047,
+   "weight": 0.137399,
    "enabled": true,
    "added": null
   },
@@ -102,7 +102,7 @@
     "scale": 0.5,
     "_sign": 1
    },
-   "weight": 0.0381,
+   "weight": 0.040439,
    "enabled": true,
    "added": null
   },
@@ -113,7 +113,7 @@
     "mode": "mag",
     "w0": 0.5
    },
-   "weight": 0.040209,
+   "weight": 0.040439,
    "enabled": true,
    "added": "2026-10-07"
   }
@@ -157,48 +157,6 @@
    "ensemble_val_wz": [
     0.342,
     0.361
-   ],
-   "trials": 1
-  },
-  "noise_area_breakout": {
-   "status": "rejected",
-   "last_trial": "2026-10-08",
-   "params": {
-    "variant": "vwap_only",
-    "anchor": "00:00UTC",
-    "mult": 0.75,
-    "check_every": 1,
-    "_sign": -1
-   },
-   "train": {
-    "n": 7008,
-    "hits": 3585,
-    "acc": 0.5116,
-    "acc_lo": 0.4999,
-    "acc_hi": 0.5233,
-    "z": 1.935,
-    "wz": 1.91,
-    "coverage": 0.9781,
-    "gross_bps": 0.084,
-    "net_bps": 0.084
-   },
-   "val": {
-    "n": 1398,
-    "hits": 706,
-    "acc": 0.505,
-    "acc_lo": 0.4788,
-    "acc_hi": 0.5312,
-    "z": 0.374,
-    "wz": 0.436,
-    "coverage": 0.9769,
-    "gross_bps": -0.031,
-    "net_bps": -0.031
-   },
-   "bar": 3.0,
-   "n_configs": 48,
-   "ensemble_val_wz": [
-    0.467,
-    0.512
    ],
    "trials": 1
   }

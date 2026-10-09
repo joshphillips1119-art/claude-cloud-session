@@ -13,7 +13,7 @@ Statuses: `idea` -> `implemented` (registered, awaiting trial) -> `adopted` | `r
 |---|---|---|---|---|
 | 1 | [`short_horizon_reversal`](#short-horizon-reversal) | mean_reversion | medium | rejected (2026-10-07 trial, window to 2026-10-06): train wz +3.50 (52.1%, n=7172) cleared bar 3.0, val wz +0.04 (50.1%, n=1425), ensemble val wz -0.685 -> -0.702 |
 | 2 | [`noise_area_breakout`](#noise-area-breakout) | breakout | medium | rejected (2026-10-08 trial, window to 2026-10-07): best = faded noise_area (us anchor tuned, mult 0.75, check_every 1, _sign -1) train wz +2.06 (51.3%, n=7015) below bar 3.0, val wz -0.06 (49.9%, n=1392), ensemble val wz +0.363 -> +0.244 |
-| 3 | [`intraday_tsmom_session_end`](#intraday-tsmom-session-end) | momentum | medium | idea (code not in repo as of 2026-10-07; earlier "implemented" status was wrong) |
+| 3 | [`intraday_tsmom_session_end`](#intraday-tsmom-session-end) | momentum | medium | rejected (2026-10-09 trial, window to 2026-10-08): best = 00:00UTC rest-of-session, L 60, delta 0, _sign +1; train wz +0.05 (49.8%, n=201, coverage 2.8%) far below bar 3.0, val wz +1.49 (63.3%, n=60), ensemble val wz +0.467 -> +0.580 |
 | 4 | [`regime_conditioned_autocorr`](#regime-conditioned-autocorr) | regime | medium | idea (code not in repo as of 2026-10-07; earlier "implemented" status was wrong) |
 | 5 | [`large_move_reversal`](#large-move-reversal) | mean_reversion | low | idea (code not in repo as of 2026-10-07; earlier "implemented" status was wrong) |
 | 6 | [`kyle_impact_residual`](#kyle-impact-residual) | order_flow | low | idea (code not in repo as of 2026-10-07; earlier "implemented" status was wrong) |
@@ -27,6 +27,7 @@ Statuses: `idea` -> `implemented` (registered, awaiting trial) -> `adopted` | `r
 | 14 | [`trade_size_intensity`](#trade-size-intensity) | order_flow | low | idea |
 | 15 | [`ema_ribbon_pullback`](#ema-ribbon-pullback) | momentum | low | idea |
 | 16 | [`three_bar_reversal`](#three-bar-reversal) | mean_reversion | low | idea |
+| 16b | [`clock_boundary_flow`](#clock-boundary-flow) | order_flow | low | idea (added 2026-10-09) |
 | 17 | [`hedge_fixed_share_ensemble`](#hedge-fixed-share-ensemble) | meta_learning | medium | framework: done (fixed-share Hedge + null expert + family caps + equal blend in scalper/ensemble.py) |
 | 18 | [`selective_cost_gate`](#selective-cost-gate) | meta_learning | medium | framework: partial (threshold tuner with coverage floor; ACI online coverage + cost condition not yet built) |
 | 19 | [`online_logistic_stacker`](#online-logistic-stacker) | meta_learning | medium | framework: idea (challenger combiner; needs a shadow-mode harness) |
@@ -57,7 +58,7 @@ Statuses: `idea` -> `implemented` (registered, awaiting trial) -> `adopted` | `r
 
 ## intraday_tsmom_session_end
 
-**End-of-session intraday time-series momentum (first or rest-of-session return predicts the last window)**. Status: idea (code not in repo as of 2026-10-07; earlier "implemented" status was wrong).
+**End-of-session intraday time-series momentum (first or rest-of-session return predicts the last window)**. Status: rejected 2026-10-09 (implemented in `scalper/strategies/intraday_tsmom_session_end.py`).
 
 - **Hypothesis:** Late in the session, the return so far (or the first half-hour return, measured from the previous close) predicts the final 30-60 minutes. Proposed causes: gamma hedging by short-gamma option and leveraged-ETF dealers, infrequent rebalancing, and late-informed trading. The effect is strongest on volatile, high-volume days. Crypto needs a defined session anchor.
 - **Formula:** Uses CN. Session [A, E): 'equity_rth' = 09:30-16:00 America/New_York. This covers SPY and ES cash hours, and for crypto it applies the same NY clock to crypto prices on weekdays only. '00:00UTC' = [00:00, 24:00) UTC (crypto). Active iff bar t+1 opens in [E - L_min, E), i.e. t+1 is one of the last L_min/5 bars; otherwise score_t = 0. P0 = close of the last bar ending at A (equities: the previous session's final RTH bar, so the overnight gap is included). Raw predictor: mode='first': R_t = ln(C at A+F_min / P0). mode='rest': R_t = ln(C_t/P0). mode='gao2' (equity_rth only): R1 = ln(C at A+30m / P0) and R12 = ln(C at E-L_min / C at E-L_min-30m). Normalizer: recompute the same quantity at the same clock time in each of the previous 20 sessions; sR = sqrt(mean of squares), with at least 10 sessions required, otherwise score 0. z_t = R_t/sR, or for gao2 z_t = (R1/sR1 + R12/sR12)/sqrt(2). Vol boost: RV_t = sqrt(sum of r_s^2 over session bars in [A, t], excluding the first bar of the session). hv_t = 1 if RV_t exceeds the median RV at the same slot over the previous 20 sessions, else 0. Score: score_t = tanh(c*z_t)*(1 + delta*hv_t)/(1 + delta).
@@ -65,7 +66,7 @@ Statuses: `idea` -> `implemented` (registered, awaiting trial) -> `adopted` | `r
 - **Evidence:** Gao, Han, Li & Zhou (JFE 2018), SPY 1993-2013: the first half-hour return (measured from the previous close) predicts the last half-hour. In-sample R2 is about 1.6-2% (4.3% in the financial crisis) and out-of-sample R2 is up to 1.8%, or 2.7% with the 12th half-hour added. The effect is stronger on volatile, high-volume and macro-news days. A 2012-2014 replication found correlation 0.12 and R2 0.014. Baltussen, Da, Lammers & Martens (JFE 2021): across 60+ futures from 1974 to 2020, the rest-of-day return predicts the last 30 minutes, linked to short-gamma hedging. Li, Sakkas & Urquhart (JFM 2022): the effect holds out of sample in 16 developed markets, stronger when liquidity is low and volatility high. Shen, Urquhart & Wang (Financial Review 2022): BTC first half-hour predicts last half-hour when sessions are defined by volume. Wen et al. (NAJEF 2022): both intraday momentum and reversal in crypto.
 - **Caveats:** Coverage is only 6-12 bars per session. A 30-minute correlation of about 0.12 spread over six 5-minute bars implies a per-bar correlation of about 0.05, or a hit rate of about 51.5%. The effect reportedly weakened after 2013. Medium confidence for SPY/ES; low for crypto, where the anchor is arbitrary and Shen et al.'s exact volume-based session definition could not be verified (full text blocked). For ES, use the 16:00 ET cash close, not the 17:00 ET Globex break. Because R is identical across the active window in mode 'first', the six active bars are not independent observations.
 - **Sources:** https://ideas.repec.org/a/eee/jfinec/v129y2018i2p394-414.html, https://profiles.wustl.edu/en/publications/market-intraday-momentum/, https://alphaarchitect.com/attention-prop-traders-the-first-half-hour-of-trading-predicts-the-last-half-hour/, https://cxoadvisory.com/calendar-effects/first-and-last-half-hours-of-trading-linked, https://www3.nd.edu/~zda/intramom.pdf, https://ideas.repec.org/a/eee/finmar/v57y2022ics138641812100001x.html, https://research.birmingham.ac.uk/en/publications/bitcoin-intraday-time-series-momentum/, https://papers.ssrn.com/sol3/papers.cfm?abstract_id=4080253, https://eranraviv.com/market-intraday-momentum
-- **Trial log:** none yet
+- **Trial log:** 2026-10-09: 24-config grid (F_min fixed at 30, c fixed at 1). No configuration had a meaningful training edge; equity_rth anchors were negative on BTC. The 60-call validation hit rate is noise at this coverage. Rejected; re-trial in 7 days.
 
 ## regime_conditioned_autocorr
 
@@ -259,3 +260,14 @@ Statuses: `idea` -> `implemented` (registered, awaiting trial) -> `adopted` | `r
 - **Sources:** https://research.google.com/pubs/archive/41159.pdf, https://ideas.repec.org/a/oup/rfinst/v23y2010i2p821-862.html, https://arxiv.org/abs/2205.04216, https://arxiv.org/abs/1505.00475
 - **Trial log:** none yet
 
+## clock_boundary_flow
+
+**Order imbalance at salient clock boundaries (:00 / :15 / :30 / :45)**. Status: idea (added 2026-10-09).
+
+- **Hypothesis:** Periodic algorithmic execution (TWAP and VWAP schedulers, funding and index rebalancing) clusters at round clock times. The taker imbalance printed in the boundary bar carries information that persists, while flow in ordinary bars is mostly noise.
+- **Formula:** Uses CN. ofi_t = (2*taker_buy_volume_t - volume_t)/volume_t. Active only when bar t opens at minute in {0, 15, 30, 45} (or {0} with `salience='hour'`); hold the signal for the next H bars (H in {1, 3, 6}). z = ofi_t / same_slot(|ofi|, 14, 'mean'). Score = tanh(c*z). The tuner's `_sign` decides between persistence and fade.
+- **Research grid:** `{"salience": ["quarter", "hour"], "H": [1, 3, 6], "c": [0.5, 1.0, 2.0]}`
+- **Evidence:** Kim & Hansen, 'The Quarter-Hour Effect' (arXiv 2607.09426, Jul 2026), Binance perpetuals 2021-2024: trading bursts and order imbalance at clock boundaries scale with salience (ordinary < 5-min < quarter-hour < top-of-hour). The opening imbalance predicts returns over 4-12h, with much weaker effects at finer horizons.
+- **Caveats:** The paper's strongest predictability is at multi-hour horizons, not the next 5 minutes. Spot taker flow is a proxy for perp flow. Coverage is low (8% of bars for quarter-hour boundaries before holding).
+- **Sources:** https://arxiv.org/abs/2607.09426, https://ideas.repec.org/p/arx/papers/2607.09426.html
+- **Trial log:** none yet

@@ -165,6 +165,11 @@
   "final": true
  },
  "2026-10-08": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-09": {
   "rows": 269,
   "source": "binance_vision",
   "final": false
