@@ -192,8 +192,9 @@ def cmd_trial(args, cfg):
                 state["strategies"][c["strategy"]] = trial_state["strategies"][c["strategy"]]
         if changes:
             state["version"] += 1
-            ss.save(state)
             ss.append_changes(clean(changes))
+        # Save rejections too, so the 7-day re-trial cooldown applies to them.
+        ss.save(state)
     print(json.dumps(clean({"window_end": day, "results": results,
                             "adopted": [c["strategy"] for c in changes] if args.adopt else [],
                             "would_adopt": [c["strategy"] for c in changes]}), indent=1))

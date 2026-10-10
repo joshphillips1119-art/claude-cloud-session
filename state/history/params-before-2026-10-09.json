@@ -1,10 +1,10 @@
 {
- "version": 4,
- "as_of": "2026-10-09",
- "last_run": "2026-10-09",
+ "version": 3,
+ "as_of": "2026-10-08",
+ "last_run": "2026-10-08",
  "ensemble": {
   "threshold": 0.15,
-  "null_weight": 0.078753
+  "null_weight": 0.078637
  },
  "strategies": {
   "momentum": {
@@ -13,7 +13,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.091544,
+   "weight": 0.07096,
    "enabled": true,
    "added": null
   },
@@ -23,7 +23,7 @@
     "band": 20.0,
     "_sign": 1
    },
-   "weight": 0.140963,
+   "weight": 0.126012,
    "enabled": true,
    "added": null
   },
@@ -33,7 +33,7 @@
     "k": 2.0,
     "_sign": 1
    },
-   "weight": 0.1473,
+   "weight": 0.136396,
    "enabled": true,
    "added": null
   },
@@ -43,17 +43,17 @@
     "k": 1.0,
     "_sign": 1
    },
-   "weight": 0.095661,
+   "weight": 0.099282,
    "enabled": true,
    "added": null
   },
   "ema_trend": {
    "params": {
-    "fast": 5,
-    "slow": 21,
-    "_sign": -1
+    "fast": 8,
+    "slow": 34,
+    "_sign": 1
    },
-   "weight": 0.073326,
+   "weight": 0.071058,
    "enabled": true,
    "added": null
   },
@@ -62,7 +62,7 @@
     "n": 24,
     "_sign": 1
    },
-   "weight": 0.029873,
+   "weight": 0.033738,
    "enabled": true,
    "added": null
   },
@@ -71,7 +71,7 @@
     "k": 3.0,
     "_sign": 1
    },
-   "weight": 0.106711,
+   "weight": 0.109978,
    "enabled": true,
    "added": null
   },
@@ -81,7 +81,7 @@
     "gain": 5.0,
     "_sign": 1
    },
-   "weight": 0.03658,
+   "weight": 0.055161,
    "enabled": true,
    "added": null
   },
@@ -92,7 +92,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.111357,
+   "weight": 0.14047,
    "enabled": true,
    "added": null
   },
@@ -102,7 +102,7 @@
     "scale": 0.5,
     "_sign": 1
    },
-   "weight": 0.037844,
+   "weight": 0.0381,
    "enabled": true,
    "added": null
   },
@@ -113,7 +113,7 @@
     "mode": "mag",
     "w0": 0.5
    },
-   "weight": 0.050087,
+   "weight": 0.040209,
    "enabled": true,
    "added": "2026-10-07"
   }
@@ -199,90 +199,6 @@
    "ensemble_val_wz": [
     0.467,
     0.512
-   ],
-   "trials": 1
-  },
-  "intraday_tsmom_session_end": {
-   "status": "rejected",
-   "last_trial": "2026-10-09",
-   "params": {
-    "anchor": "00:00UTC",
-    "mode": "rest",
-    "L_min": 60,
-    "c": 1.0,
-    "delta": 0.0,
-    "_sign": 1
-   },
-   "train": {
-    "n": 201,
-    "hits": 100,
-    "acc": 0.4975,
-    "acc_lo": 0.4291,
-    "acc_hi": 0.566,
-    "z": -0.071,
-    "wz": 0.378,
-    "coverage": 0.0281,
-    "gross_bps": -0.202,
-    "net_bps": -0.202
-   },
-   "val": {
-    "n": 60,
-    "hits": 35,
-    "acc": 0.5833,
-    "acc_lo": 0.4573,
-    "acc_hi": 0.6994,
-    "z": 1.291,
-    "wz": 0.682,
-    "coverage": 0.0418,
-    "gross_bps": 0.38,
-    "net_bps": 0.38
-   },
-   "bar": 3.0,
-   "n_configs": 48,
-   "ensemble_val_wz": [
-    0.473,
-    0.511
-   ],
-   "trials": 1
-  },
-  "regime_conditioned_autocorr": {
-   "status": "rejected",
-   "last_trial": "2026-10-09",
-   "params": {
-    "W_days": 20,
-    "bins": "volume3",
-    "mode": "sign",
-    "n0": 1500
-   },
-   "train": {
-    "n": 6275,
-    "hits": 3226,
-    "acc": 0.5141,
-    "acc_lo": 0.5017,
-    "acc_hi": 0.5265,
-    "z": 2.234,
-    "wz": 1.812,
-    "coverage": 0.8765,
-    "gross_bps": 0.128,
-    "net_bps": 0.128
-   },
-   "val": {
-    "n": 1434,
-    "hits": 752,
-    "acc": 0.5244,
-    "acc_lo": 0.4985,
-    "acc_hi": 0.5502,
-    "z": 1.849,
-    "wz": 2.064,
-    "coverage": 0.9979,
-    "gross_bps": 0.433,
-    "net_bps": 0.433
-   },
-   "bar": 3.0,
-   "n_configs": 39,
-   "ensemble_val_wz": [
-    0.473,
-    0.717
    ],
    "trials": 1
   }
