@@ -56,3 +56,14 @@
 {"date": "2026-10-10", "kind": "weight", "strategy": "taker_flow", "from": 0.111357, "to": 0.107494, "gain_wz": 1.612}
 {"date": "2026-10-10", "kind": "weight", "strategy": "close_location", "from": 0.037844, "to": 0.022508, "gain_wz": -0.553}
 {"date": "2026-10-10", "kind": "weight", "strategy": "short_horizon_reversal", "from": 0.050087, "to": 0.057648, "gain_wz": 2.08}
+{"date": "2026-10-11", "kind": "weight", "strategy": "momentum", "from": 0.101329, "to": 0.095616, "gain_wz": 0.516}
+{"date": "2026-10-11", "kind": "weight", "strategy": "rsi_reversion", "from": 0.194022, "to": 0.218832, "gain_wz": 1.195}
+{"date": "2026-10-11", "kind": "weight", "strategy": "bollinger_reversion", "from": 0.200897, "to": 0.209884, "gain_wz": 0.937}
+{"date": "2026-10-11", "kind": "weight", "strategy": "vwap_reversion", "from": 0.072498, "to": 0.065142, "gain_wz": 0.281}
+{"date": "2026-10-11", "kind": "weight", "strategy": "ema_trend", "from": 0.107347, "to": 0.108373, "gain_wz": 0.759}
+{"date": "2026-10-11", "kind": "weight", "strategy": "donchian_breakout", "from": 0.014411, "to": 0.012676, "gain_wz": -0.898}
+{"date": "2026-10-11", "kind": "weight", "strategy": "shock_reversal", "from": 0.048149, "to": 0.02866, "gain_wz": -1.395}
+{"date": "2026-10-11", "kind": "weight", "strategy": "autocorr_adaptive", "from": 0.024476, "to": 0.022299, "gain_wz": -0.142}
+{"date": "2026-10-11", "kind": "weight", "strategy": "taker_flow", "from": 0.107494, "to": 0.104887, "gain_wz": 0.641}
+{"date": "2026-10-11", "kind": "weight", "strategy": "close_location", "from": 0.022508, "to": 0.017834, "gain_wz": -0.805}
+{"date": "2026-10-11", "kind": "weight", "strategy": "short_horizon_reversal", "from": 0.057648, "to": 0.073579, "gain_wz": 1.477}
