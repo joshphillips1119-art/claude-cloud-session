@@ -1,10 +1,10 @@
 {
- "version": 9,
- "as_of": "2026-10-14",
- "last_run": "2026-10-14",
+ "version": 10,
+ "as_of": "2026-10-15",
+ "last_run": "2026-10-15",
  "ensemble": {
   "threshold": 0.4,
-  "null_weight": 0.043866
+  "null_weight": 0.039407
  },
  "strategies": {
   "momentum": {
@@ -13,7 +13,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.088791,
+   "weight": 0.082215,
    "enabled": true,
    "added": null
   },
@@ -23,7 +23,7 @@
     "band": 20.0,
     "_sign": 1
    },
-   "weight": 0.182148,
+   "weight": 0.202404,
    "enabled": true,
    "added": null
   },
@@ -33,7 +33,7 @@
     "k": 2.0,
     "_sign": 1
    },
-   "weight": 0.171658,
+   "weight": 0.19138,
    "enabled": true,
    "added": null
   },
@@ -43,7 +43,7 @@
     "k": 1.0,
     "_sign": 1
    },
-   "weight": 0.054721,
+   "weight": 0.053569,
    "enabled": true,
    "added": null
   },
@@ -53,7 +53,7 @@
     "slow": 21,
     "_sign": -1
    },
-   "weight": 0.083428,
+   "weight": 0.115378,
    "enabled": true,
    "added": null
   },
@@ -62,7 +62,7 @@
     "n": 24,
     "_sign": 1
    },
-   "weight": 0.013683,
+   "weight": 0.010704,
    "enabled": true,
    "added": null
   },
@@ -71,7 +71,7 @@
     "k": 3.0,
     "_sign": 1
    },
-   "weight": 0.067704,
+   "weight": 0.08085,
    "enabled": true,
    "added": null
   },
@@ -81,7 +81,7 @@
     "gain": 5.0,
     "_sign": 1
    },
-   "weight": 0.029944,
+   "weight": 0.025935,
    "enabled": true,
    "added": null
   },
@@ -92,7 +92,7 @@
     "scale": 2.0,
     "_sign": -1
    },
-   "weight": 0.161391,
+   "weight": 0.126748,
    "enabled": true,
    "added": null
   },
@@ -102,7 +102,7 @@
     "scale": 0.5,
     "_sign": -1
    },
-   "weight": 0.020812,
+   "weight": 0.015392,
    "enabled": true,
    "added": null
   },
@@ -113,7 +113,7 @@
     "mode": "mag",
     "w0": 0.5
    },
-   "weight": 0.081853,
+   "weight": 0.056017,
    "enabled": true,
    "added": "2026-10-07"
   }
@@ -162,45 +162,45 @@
   },
   "noise_area_breakout": {
    "status": "rejected",
-   "last_trial": "2026-10-08",
+   "last_trial": "2026-10-15",
    "params": {
     "variant": "vwap_only",
-    "anchor": "00:00UTC",
+    "anchor": "us_open_ny",
     "mult": 0.75,
-    "check_every": 1,
+    "check_every": 6,
     "_sign": -1
    },
    "train": {
-    "n": 7008,
-    "hits": 3585,
-    "acc": 0.5116,
-    "acc_lo": 0.4999,
-    "acc_hi": 0.5233,
-    "z": 1.935,
-    "wz": 1.91,
-    "coverage": 0.9781,
-    "gross_bps": 0.084,
-    "net_bps": 0.084
+    "n": 7005,
+    "hits": 3582,
+    "acc": 0.5113,
+    "acc_lo": 0.4996,
+    "acc_hi": 0.523,
+    "z": 1.9,
+    "wz": 1.669,
+    "coverage": 0.9774,
+    "gross_bps": 0.102,
+    "net_bps": 0.102
    },
    "val": {
     "n": 1398,
-    "hits": 706,
-    "acc": 0.505,
-    "acc_lo": 0.4788,
-    "acc_hi": 0.5312,
-    "z": 0.374,
-    "wz": 0.436,
-    "coverage": 0.9769,
-    "gross_bps": -0.031,
-    "net_bps": -0.031
+    "hits": 717,
+    "acc": 0.5129,
+    "acc_lo": 0.4867,
+    "acc_hi": 0.539,
+    "z": 0.963,
+    "wz": 1.353,
+    "coverage": 0.9776,
+    "gross_bps": -0.15,
+    "net_bps": -0.15
    },
    "bar": 3.0,
    "n_configs": 48,
    "ensemble_val_wz": [
-    0.467,
-    0.512
+    0.667,
+    0.871
    ],
-   "trials": 1
+   "trials": 2
   },
   "intraday_tsmom_session_end": {
    "status": "rejected",
@@ -453,6 +453,48 @@
    "ensemble_val_wz": [
     1.481,
     1.25
+   ],
+   "trials": 1
+  },
+  "compression_breakout": {
+   "status": "rejected",
+   "last_trial": "2026-10-15",
+   "params": {
+    "setup": "nr",
+    "k": 7,
+    "buf": 0.25,
+    "decay_bars": 6,
+    "_sign": -1
+   },
+   "train": {
+    "n": 4766,
+    "hits": 2467,
+    "acc": 0.5176,
+    "acc_lo": 0.5034,
+    "acc_hi": 0.5318,
+    "z": 2.434,
+    "wz": 2.586,
+    "coverage": 0.665,
+    "gross_bps": 0.098,
+    "net_bps": 0.098
+   },
+   "val": {
+    "n": 873,
+    "hits": 454,
+    "acc": 0.52,
+    "acc_lo": 0.4869,
+    "acc_hi": 0.553,
+    "z": 1.185,
+    "wz": 0.974,
+    "coverage": 0.6105,
+    "gross_bps": -0.112,
+    "net_bps": -0.112
+   },
+   "bar": 3.0,
+   "n_configs": 59,
+   "ensemble_val_wz": [
+    0.667,
+    0.757
    ],
    "trials": 1
   }

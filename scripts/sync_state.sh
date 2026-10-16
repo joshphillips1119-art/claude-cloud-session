@@ -10,12 +10,19 @@ if ! git fetch -q origin "$LIVE" 2>/dev/null; then
   echo "[sync] no $LIVE branch on origin yet: starting from this checkout's state"
   exit 0
 fi
-if git merge-base --is-ancestor "origin/$LIVE" HEAD; then
-  echo "[sync] already contains origin/$LIVE"
+# A run that could only push its own session branch leaves the newest state
+# there; take the most recent claude/* branch that builds on the live branch.
+SRC="origin/$LIVE"
+git fetch -q origin '+refs/heads/claude/*:refs/remotes/origin/claude/*' 2>/dev/null || true
+for ref in $(git for-each-ref --sort=-committerdate --format='%(refname:short)' refs/remotes/origin/claude/); do
+  if git merge-base --is-ancestor "origin/$LIVE" "$ref"; then SRC="$ref"; break; fi
+done
+if git merge-base --is-ancestor "$SRC" HEAD; then
+  echo "[sync] already contains $SRC"
   exit 0
 fi
-if git merge --no-edit -q "origin/$LIVE"; then
-  echo "[sync] merged origin/$LIVE"
+if git merge --no-edit -q "$SRC"; then
+  echo "[sync] merged $SRC"
   exit 0
 fi
 # Conflicts: learning artefacts always come from the live branch; anything else is a real conflict.
