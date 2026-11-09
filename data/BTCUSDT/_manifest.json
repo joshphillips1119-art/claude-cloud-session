@@ -200,7 +200,132 @@
   "final": true
  },
  "2026-10-15": {
-  "rows": 269,
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-16": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-17": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-18": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-19": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-20": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-21": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-22": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-23": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-24": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-25": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-26": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-27": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-28": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-29": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-30": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-10-31": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-01": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-02": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-03": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-04": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-05": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-06": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-07": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-08": {
+  "rows": 288,
+  "source": "binance_vision",
+  "final": true
+ },
+ "2026-11-09": {
+  "rows": 271,
   "source": "binance_vision",
   "final": false
  }

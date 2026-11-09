@@ -1,0 +1,460 @@
+{
+ "version": 32,
+ "as_of": "2026-11-06",
+ "last_run": "2026-11-06",
+ "ensemble": {
+  "threshold": 0.25,
+  "null_weight": 0.024009
+ },
+ "strategies": {
+  "momentum": {
+   "params": {
+    "n": 6,
+    "scale": 2.0,
+    "_sign": -1
+   },
+   "weight": 0.090757,
+   "enabled": true,
+   "added": null
+  },
+  "rsi_reversion": {
+   "params": {
+    "n": 14,
+    "band": 20.0,
+    "_sign": 1
+   },
+   "weight": 0.200539,
+   "enabled": true,
+   "added": null
+  },
+  "bollinger_reversion": {
+   "params": {
+    "n": 20,
+    "k": 2.0,
+    "_sign": 1
+   },
+   "weight": 0.212845,
+   "enabled": true,
+   "added": null
+  },
+  "vwap_reversion": {
+   "params": {
+    "n": 48,
+    "k": 1.0,
+    "_sign": 1
+   },
+   "weight": 0.033384,
+   "enabled": true,
+   "added": null
+  },
+  "ema_trend": {
+   "params": {
+    "fast": 5,
+    "slow": 21,
+    "_sign": -1
+   },
+   "weight": 0.080914,
+   "enabled": true,
+   "added": null
+  },
+  "donchian_breakout": {
+   "params": {
+    "n": 24,
+    "_sign": 1
+   },
+   "weight": 0.017162,
+   "enabled": true,
+   "added": null
+  },
+  "shock_reversal": {
+   "params": {
+    "k": 3.0,
+    "_sign": 1
+   },
+   "weight": 0.028966,
+   "enabled": true,
+   "added": null
+  },
+  "autocorr_adaptive": {
+   "params": {
+    "n": 96,
+    "gain": 5.0,
+    "_sign": 1
+   },
+   "weight": 0.0353,
+   "enabled": true,
+   "added": null
+  },
+  "taker_flow": {
+   "params": {
+    "n": 6,
+    "z_n": 288,
+    "scale": 2.0,
+    "_sign": -1
+   },
+   "weight": 0.074351,
+   "enabled": true,
+   "added": null
+  },
+  "close_location": {
+   "params": {
+    "n": 3,
+    "scale": 0.5,
+    "_sign": -1
+   },
+   "weight": 0.08909,
+   "enabled": true,
+   "added": null
+  },
+  "short_horizon_reversal": {
+   "params": {
+    "K": 3,
+    "lam": 0.6,
+    "mode": "mag",
+    "w0": 0.5
+   },
+   "weight": 0.112681,
+   "enabled": true,
+   "added": "2026-10-07"
+  }
+ },
+ "candidates": {
+  "short_horizon_reversal": {
+   "status": "enabled",
+   "last_trial": "2026-10-07",
+   "params": {
+    "K": 6,
+    "lam": 1.0,
+    "mode": "mag",
+    "w0": 0.5
+   },
+   "train": {
+    "n": 7172,
+    "hits": 3732,
+    "acc": 0.5204,
+    "acc_lo": 0.5088,
+    "acc_hi": 0.5319,
+    "z": 3.448,
+    "wz": 3.509,
+    "coverage": 1.0,
+    "gross_bps": 0.127,
+    "net_bps": 0.127
+   },
+   "val": {
+    "n": 1425,
+    "hits": 724,
+    "acc": 0.5081,
+    "acc_lo": 0.4821,
+    "acc_hi": 0.534,
+    "z": 0.609,
+    "wz": 0.561,
+    "coverage": 1.0,
+    "gross_bps": 0.049,
+    "net_bps": 0.049
+   },
+   "bar": 3.0,
+   "n_configs": 24,
+   "ensemble_val_wz": [
+    0.342,
+    0.361
+   ],
+   "trials": 1
+  },
+  "noise_area_breakout": {
+   "status": "rejected",
+   "last_trial": "2026-11-05",
+   "params": {
+    "variant": "vwap_only",
+    "anchor": "us_open_ny",
+    "mult": 1.5,
+    "check_every": 1,
+    "_sign": -1
+   },
+   "train": {
+    "n": 7010,
+    "hits": 3591,
+    "acc": 0.5123,
+    "acc_lo": 0.5006,
+    "acc_hi": 0.524,
+    "z": 2.054,
+    "wz": 2.261,
+    "coverage": 0.978,
+    "gross_bps": -0.056,
+    "net_bps": -0.056
+   },
+   "val": {
+    "n": 1394,
+    "hits": 707,
+    "acc": 0.5072,
+    "acc_lo": 0.4809,
+    "acc_hi": 0.5334,
+    "z": 0.536,
+    "wz": 0.747,
+    "coverage": 0.9701,
+    "gross_bps": -0.126,
+    "net_bps": -0.126
+   },
+   "bar": 3.0,
+   "n_configs": 48,
+   "ensemble_val_wz": [
+    0.269,
+    0.404
+   ],
+   "trials": 5
+  },
+  "intraday_tsmom_session_end": {
+   "status": "rejected",
+   "last_trial": "2026-11-06",
+   "params": {
+    "anchor": "00:00UTC",
+    "mode": "rest",
+    "L_min": 60,
+    "c": 1.0,
+    "delta": 0.0,
+    "_sign": 1
+   },
+   "train": {
+    "n": 203,
+    "hits": 98,
+    "acc": 0.4828,
+    "acc_lo": 0.415,
+    "acc_hi": 0.5512,
+    "z": -0.491,
+    "wz": -1.082,
+    "coverage": 0.0283,
+    "gross_bps": 0.505,
+    "net_bps": 0.505
+   },
+   "val": {
+    "n": 60,
+    "hits": 29,
+    "acc": 0.4833,
+    "acc_lo": 0.3617,
+    "acc_hi": 0.6069,
+    "z": -0.258,
+    "wz": -0.184,
+    "coverage": 0.0417,
+    "gross_bps": -1.766,
+    "net_bps": -1.766
+   },
+   "bar": 3.0,
+   "n_configs": 48,
+   "ensemble_val_wz": [
+    1.331,
+    1.31
+   ],
+   "trials": 5
+  },
+  "regime_conditioned_autocorr": {
+   "status": "rejected",
+   "last_trial": "2026-11-06",
+   "params": {
+    "W_days": 20,
+    "bins": "volume3",
+    "mode": "slope",
+    "n0": 1500
+   },
+   "train": {
+    "n": 6275,
+    "hits": 3192,
+    "acc": 0.5087,
+    "acc_lo": 0.4963,
+    "acc_hi": 0.521,
+    "z": 1.376,
+    "wz": 1.962,
+    "coverage": 0.8758,
+    "gross_bps": 0.283,
+    "net_bps": 0.283
+   },
+   "val": {
+    "n": 1440,
+    "hits": 756,
+    "acc": 0.525,
+    "acc_lo": 0.4992,
+    "acc_hi": 0.5507,
+    "z": 1.897,
+    "wz": 1.008,
+    "coverage": 1.0,
+    "gross_bps": 0.246,
+    "net_bps": 0.246
+   },
+   "bar": 3.0,
+   "n_configs": 38,
+   "ensemble_val_wz": [
+    1.331,
+    1.38
+   ],
+   "trials": 5
+  },
+  "large_move_reversal": {
+   "status": "rejected",
+   "last_trial": "2026-10-31",
+   "params": {
+    "m": 3,
+    "theta": 2.5,
+    "v_min": 1.5,
+    "decay_bars": 3,
+    "_sign": 1
+   },
+   "train": {
+    "n": 504,
+    "hits": 260,
+    "acc": 0.5159,
+    "acc_lo": 0.4723,
+    "acc_hi": 0.5592,
+    "z": 0.713,
+    "wz": 2.635,
+    "coverage": 0.0704,
+    "gross_bps": -0.225,
+    "net_bps": -0.225
+   },
+   "val": {
+    "n": 118,
+    "hits": 56,
+    "acc": 0.4746,
+    "acc_lo": 0.3867,
+    "acc_hi": 0.564,
+    "z": -0.552,
+    "wz": -0.349,
+    "coverage": 0.0822,
+    "gross_bps": -1.231,
+    "net_bps": -1.231
+   },
+   "bar": 3.0,
+   "n_configs": 52,
+   "ensemble_val_wz": [
+    0.343,
+    0.328
+   ],
+   "trials": 4
+  },
+  "kyle_impact_residual": {
+   "status": "rejected",
+   "last_trial": "2026-11-01",
+   "params": {
+    "W": 288,
+    "n": 1,
+    "c": 2.0,
+    "impact": "sqrt",
+    "_sign": 1
+   },
+   "train": {
+    "n": 7157,
+    "hits": 3601,
+    "acc": 0.5031,
+    "acc_lo": 0.4916,
+    "acc_hi": 0.5147,
+    "z": 0.532,
+    "wz": 1.399,
+    "coverage": 1.0,
+    "gross_bps": 0.046,
+    "net_bps": 0.046
+   },
+   "val": {
+    "n": 1433,
+    "hits": 740,
+    "acc": 0.5164,
+    "acc_lo": 0.4905,
+    "acc_hi": 0.5422,
+    "z": 1.242,
+    "wz": 0.967,
+    "coverage": 1.0,
+    "gross_bps": 0.217,
+    "net_bps": 0.217
+   },
+   "bar": 3.0,
+   "n_configs": 54,
+   "ensemble_val_wz": [
+    -0.127,
+    -0.005
+   ],
+   "trials": 4
+  },
+  "seasonal_slot_prior": {
+   "status": "rejected",
+   "last_trial": "2026-11-03",
+   "params": {
+    "key": "qh_class",
+    "D_days": 14,
+    "stat": "mean",
+    "demean": 0,
+    "c": 2.0,
+    "_sign": -1
+   },
+   "train": {
+    "n": 7168,
+    "hits": 3576,
+    "acc": 0.4989,
+    "acc_lo": 0.4873,
+    "acc_hi": 0.5105,
+    "z": -0.189,
+    "wz": 1.869,
+    "coverage": 1.0,
+    "gross_bps": 0.117,
+    "net_bps": 0.117
+   },
+   "val": {
+    "n": 1435,
+    "hits": 719,
+    "acc": 0.501,
+    "acc_lo": 0.4752,
+    "acc_hi": 0.5269,
+    "z": 0.079,
+    "wz": -0.289,
+    "coverage": 1.0,
+    "gross_bps": 0.15,
+    "net_bps": 0.15
+   },
+   "bar": 3.0,
+   "n_configs": 60,
+   "ensemble_val_wz": [
+    1.341,
+    1.311
+   ],
+   "trials": 4
+  },
+  "trend_state_momentum": {
+   "status": "rejected",
+   "last_trial": "2026-11-04",
+   "params": {
+    "variant": "supertrend",
+    "mode": "state",
+    "atr_len": 20,
+    "mult": 2.0,
+    "htf_confirm": "1h",
+    "_sign": -1
+   },
+   "train": {
+    "n": 7168,
+    "hits": 3666,
+    "acc": 0.5114,
+    "acc_lo": 0.4999,
+    "acc_hi": 0.523,
+    "z": 1.937,
+    "wz": 2.636,
+    "coverage": 1.0,
+    "gross_bps": 0.088,
+    "net_bps": 0.088
+   },
+   "val": {
+    "n": 1436,
+    "hits": 720,
+    "acc": 0.5014,
+    "acc_lo": 0.4756,
+    "acc_hi": 0.5272,
+    "z": 0.106,
+    "wz": 0.404,
+    "coverage": 1.0,
+    "gross_bps": -0.241,
+    "net_bps": -0.241
+   },
+   "bar": 3.0,
+   "n_configs": 54,
+   "ensemble_val_wz": [
+    1.437,
+    1.322
+   ],
+   "trials": 4
+  }
+ }
+}
