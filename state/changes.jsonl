@@ -416,3 +416,15 @@
 {"date": "2026-11-11", "kind": "weight", "strategy": "short_horizon_reversal", "from": 0.09596, "to": 0.090764, "gain_wz": 0.987}
 {"date": "2026-11-11", "kind": "params", "strategy": "donchian_breakout", "from": {"n": 24, "_sign": 1}, "to": {"n": 12, "_sign": -1}, "train_wz": [-2.372, 2.175], "val_wz": [-1.769, 0.771]}
 {"date": "2026-11-11", "kind": "enable", "strategy": "vwap_band_reversion", "params": {"anchor": "utc0", "k_entry": 1.0, "lambda_trend": 0.0, "require_rejection": false, "_sign": 1}, "train_wz": 3.618, "val_wz": 2.134}
+{"date": "2026-11-12", "kind": "weight", "strategy": "momentum", "from": 0.093084, "to": 0.103235, "gain_wz": 1.596}
+{"date": "2026-11-12", "kind": "weight", "strategy": "rsi_reversion", "from": 0.336464, "to": 0.317733, "gain_wz": 1.146}
+{"date": "2026-11-12", "kind": "weight", "strategy": "bollinger_reversion", "from": 0.188211, "to": 0.213992, "gain_wz": 1.745}
+{"date": "2026-11-12", "kind": "weight", "strategy": "vwap_reversion", "from": 0.036776, "to": 0.02219, "gain_wz": -0.941}
+{"date": "2026-11-12", "kind": "weight", "strategy": "ema_trend", "from": 0.09812, "to": 0.099251, "gain_wz": 1.284}
+{"date": "2026-11-12", "kind": "weight", "strategy": "donchian_breakout", "from": 0.009018, "to": 0.011094, "gain_wz": 0.649}
+{"date": "2026-11-12", "kind": "weight", "strategy": "shock_reversal", "from": 0.014875, "to": 0.012048, "gain_wz": -0.607}
+{"date": "2026-11-12", "kind": "weight", "strategy": "autocorr_adaptive", "from": 0.026729, "to": 0.018191, "gain_wz": -0.697}
+{"date": "2026-11-12", "kind": "weight", "strategy": "taker_flow", "from": 0.049887, "to": 0.043295, "gain_wz": 0.595}
+{"date": "2026-11-12", "kind": "weight", "strategy": "close_location", "from": 0.040614, "to": 0.03863, "gain_wz": 0.861}
+{"date": "2026-11-12", "kind": "weight", "strategy": "short_horizon_reversal", "from": 0.090764, "to": 0.095636, "gain_wz": 1.415}
+{"date": "2026-11-12", "kind": "weight", "strategy": "vwap_band_reversion", "from": 0.009018, "to": 0.010635, "gain_wz": 0.431}
